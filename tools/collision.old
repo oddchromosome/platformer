@@ -1,0 +1,42 @@
+if coll then
+  self.vel.y = 0
+  self.dir.y = 0
+
+  -- y collisions
+  if self.pos.y + self.size.y / 2 < rect.pos.y + rect.size.y / 2 then
+
+    -- fix bounds
+    if box.pos.y + box.size.y > rect.pos.y and
+       self.pos.y + self.size.y < rect.pos.y + game.sprite / 2 then
+
+      self.pos.y = rect.pos.y - self.size.y
+    end
+  else
+    self.vel.y = -self.vel.y
+    -- goto cont
+  end
+
+  -- x collisions
+  if self.pos.x < rect.pos.x + rect.size.x/2 then
+
+    --fix bounds left
+    if box.pos.x + box.size.x > rect.pos.x and
+       self.pos.y + self.size.y > rect.pos.y then
+
+      self.vel.x = 0
+      self.dir.x = 0
+
+      self.pos.x = rect.pos.x - rect.size.x
+    end
+  else
+    --fix bounds right
+    if box.pos.x < rect.pos.x + rect.size.x and
+       self.pos.y + self.size.y > rect.pos.y then
+
+      self.vel.x = 0
+      self.dir.x = 0
+
+      self.pos.x = rect.pos.x + rect.size.x
+    end
+  end
+end
