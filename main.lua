@@ -24,6 +24,7 @@ function love.load()
   obm:load()
 
   obm:add(require("objects/player"):new(2*game.sprite,0*game.sprite))
+  obm:add(require("objects/opponent"):new(7*game.sprite,0*game.sprite))
 end
 
 function love.update(dt)
