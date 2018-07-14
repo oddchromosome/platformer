@@ -8,6 +8,14 @@ local ss = game.sprite
 local lg = love.graphics
 local key = love.keyboard.isDown
 
+local quad = love.graphics.newQuad
+local animation_data = {
+  quad(0,0,8,8,24,8),
+  quad(8,0,8,8,24,8),
+  quad(16,0,8,8,24,8)
+}
+local image = love.graphics.newImage("assets/images/player-tiles.png")
+
 local Player = {}
 
 function Player:new(x,y)
@@ -18,21 +26,42 @@ function Player:new(x,y)
     renderer:addRenderer(self)
 
     init_physics(self, 150)
+
+    self.animation = require("tools/animation"):new(
+      image,
+      {
+        {
+          animation_data[3]
+        },
+        {
+          animation_data[1],
+          animation_data[2],
+          animation_data[1]
+        },
+        0.2
+      }
+    )
+
+    self.animation:play()
   end
 
   function player:tick(dt)
 
     camera:goto_point(self.pos)
 
+    self.animation:set_animation(1)
+
     -- apply gravity
     apply_gravity(self,dt)
 
     if key("left") then
+      self.animation:set_animation(2)
       self.dir.x = -1
       self.vel.x = 50
     end
 
     if key("right") then
+      self.animation:set_animation(2)
       self.dir.x = 1
       self.vel.x = 50
     end
@@ -48,10 +77,13 @@ function Player:new(x,y)
     self.pos.y = self.pos.y + (self.vel.y * dt) * self.dir.y
 
     self.vel.x = self.vel.x * (1 - dt*12)
+
+    self.animation:update(dt)
   end
 
   function player:draw()
-    lg.rectangle("fill", self.pos.x, self.pos.y, self.size.x, self.size.y)
+    self.animation:draw({self.pos.x, self.pos.y})
+    --lg.rectangle("fill", self.pos.x, self.pos.y, self.size.x, self.size.y)
   end
 
   return player

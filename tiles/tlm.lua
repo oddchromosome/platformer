@@ -15,11 +15,22 @@ local quads =
   quad(16,0,8,8,24,8)--player
 }
 
+function gen_quads()
+  local tile_width = 3
+  local tile_height = 1
+
+  local j = 1
+  for i = 1,tile_width do
+    quads[i] = quad((i-1) * game.sprite,(j-1) * game.sprite, game.sprite, game.sprite, tile_width * game.sprite, tile_height * game.sprite)
+  end
+end
+
 function Tlm:load()
   self.img = asm:get("tiles")
   self.tileMap = tileMap
   renderer:addRenderer(self)
   self:loadmap("level_1")
+  --gen_quads()
 end
 
 function Tlm:loadmap(mapname)
@@ -43,6 +54,10 @@ function Tlm:loadmap(mapname)
       end
     end
   end
+end
+
+function Tlm:is_solid_at_pos(x,y)
+  return self.tileMap:get("tiles-solid",y,x) ~= nill
 end
 
 function Tlm:draw()
